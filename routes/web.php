@@ -17,4 +17,12 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
+Route::get('/welcome', function () {
+    return view('auth.newuser');
+});
+
+Route::resource('profile', 'DetailController');
+
+Route::resource('image', 'FileUploadController');
+
 Route::get('/home', 'HomeController@index')->name('home');

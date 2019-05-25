@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -13,7 +13,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="{{ asset('js/changeprofilepic.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
@@ -24,7 +23,6 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    @include('layouts.modal')
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -36,10 +34,9 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav">
-                            
+                    <ul class="navbar-nav mr-auto">
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -55,9 +52,6 @@
                                 </li>
                             @endif
                         @else
-                            <a href="#" data-toggle="modal" data-target="#changeprofilepic">
-                                <img src="#" style="height: 40px; width: 40px; background-color: grey;">
-                            </a>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} {{ Auth::user()->lastname }}<span class="caret"></span>
@@ -72,15 +66,6 @@
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
-                                    </form>
-                                    <!------------------------------------------------>
-                                    <a class="dropdown-item" href="/profile/{{ Auth::user()->id }}/edit" onclick="event.preventDefault();
-                                                     document.getElementById('editprofile').submit();">
-                                        {{ __('Edit profile') }}
-                                    </a>
-                                    <form id="editprofile" action="/profile/{{ Auth::user()->id }}/edit" method="GET" style="display: none;">
-                                        @csrf
-                                        <input type="hidden" class="form-control" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                     </form>
                                 </div>
                             </li>                            

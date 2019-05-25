@@ -10,6 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <style>
             html, body {
                 background-color: #fff;
@@ -68,7 +69,10 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <form method="GET" action="/profile/{{ Auth::user()->id }}">
+                            {{ csrf_field() }}
+                            <button class="btn btn-primary" type="submit">Home</button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}">Login</a>
 
