@@ -11,13 +11,13 @@
     ///////////////////////////////////////////////////////////////////////////////////////////*/
     $("#updateprofileinfo1").click(function(e){
       e.preventDefault();   //Avoid to form submit by just hitting "Submit" button
-      $("form")[2].setAttribute("action", "/profile/{{ Auth::user()->id }}"); //Setting the attribute "action" of form field (suggestion)
+      $("#updateprofileinfoform1").attr("action", "/profile/{{ Auth::user()->id }}"); //Setting the attribute "action" of form field (suggestion)
       $("#updateprofileinfoform1").submit(); //Submits the form
     });
     $("#updateprofileinfo2").click(function(e){
       e.preventDefault();   //Avoid to form submit by just hitting "Submit" button
-      $("form")[3].setAttribute("action", "/profile"); //Setting the attribute "action" of form field (suggestion)
-      $("form")[3].setAttribute("method", "POST");
+      $("#updateprofileinfoform2").attr("action", "/profile"); //Setting the attribute "action" of form field (suggestion)
+      $("#updateprofileinfoform2").attr("method", "POST");
       $("#updateprofileinfoform2").submit(); //Submits the form
     });
     /*///////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@
                       <div class="form-group">
                         <label for="country">Country</label>
                         <select class="form-control" name="country">
-                          @include('layouts.countries')
+                          @include('layouts.options.countries')
                         </select>
                       </div>
                       <div class="form-group">

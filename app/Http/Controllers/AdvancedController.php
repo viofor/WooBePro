@@ -54,7 +54,9 @@ class AdvancedController extends Controller
             'twitter' => $request['twitter'],
             'linkedin' => $request['linkedin'],
             if ($user == '2') {                                     //if the user is a professional
-                'video' => $request['video'],
+                if ($request['video'] != null) {
+                    'video' => $request['video'],
+                }
             }
         ]);
     }

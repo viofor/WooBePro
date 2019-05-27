@@ -36,7 +36,7 @@ class DaysoffController extends Controller
      */
     public function store(Request $request)
     {
-        $month = $request['month'];                                         //loads the month input
+        $month = $request['month0'];                                         //loads the month input
         $this->validate($request, [
             'user_id' => ['required', 'numeric'],
             'month' => ['required', 'numeric', 'between:1,12'],
@@ -51,8 +51,8 @@ class DaysoffController extends Controller
 
         return daysoff::create([
             'user_id' => Auth::user()->id,
-            'day' => $request['day'],
-            'month' => $request['month'],
+            'day' => $request['day0'],
+            'month' => $request['month0'],
     }
 
     /**

@@ -47,7 +47,7 @@
                   <div class="form-group">
                     <label for="country">Country</label>
                     <select class="form-control" id="country" name="country">
-                      @include('layouts.countries')
+                      @include('layouts.options.countries')
                     </select>
                   </div>
                   <div class="form-group">

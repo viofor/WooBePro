@@ -6,6 +6,7 @@ use App\detail;
 use App\countries;
 use App\User;
 use App\advanced;
+use App\daysoff;
 use Illuminate\Http\Request;
 use App\Http\Requests\DetailRequest;
 use App\Http\Requests\DetailUpdateRequest;
@@ -13,6 +14,7 @@ use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DetailController extends Controller
 {
@@ -23,7 +25,7 @@ class DetailController extends Controller
      */
     public function index()
     {
-        //
+        return redirect(url('profile/accst'));
     }
 
     /**
@@ -208,7 +210,7 @@ class DetailController extends Controller
                 'phone' => $userdetail['phone'],]
             );
         }
-        return redirect('/home');
+        return redirect()->back();
     }
 
     /**
@@ -220,5 +222,86 @@ class DetailController extends Controller
     public function destroy(detail $detail)
     {
         //
+    }
+
+    /**
+     * Returns the view fir changing the account settings (password).
+     *
+     * @param  \App\detail  $detail
+     * @return \Illuminate\Http\Response
+     */
+    public function accSettings(Request $request)
+    {
+        $id = Auth::user()->id;
+        $calendar = daysoff::where('user_id', $id)->get()->all();
+        return view('accSettings',compact('calendar'));
+    }
+
+    /**
+     * Change the account settings (password).
+     *
+     * @param  \App\detail  $detail
+     * @return \Illuminate\Http\Response
+     */
+    public function accSettingsUpdate(Request $request)
+    {
+        $id = Auth::user()->id;
+        $userpassword = $request['currentpassword'];
+        $newpassword = $request['newpassword'];
+        $confirmnewpass = $request['confirmnewpass'];
+        $newpasshashed = Hash::make($newpassword);
+        $newpasslen = strlen($newpassword);
+        $currentpassword = Auth::user()->password;
+        if (Hash::check($userpassword, $currentpassword)){
+            if ($newpassword == $confirmnewpass) {
+                if (Hash::check($newpassword, $currentpassword)) {
+                    return redirect()->back()->with('error', 'Your new password cannot be the same as the current one');
+                }elseif ($newpasslen >= 8){
+                    DB::table('users')->where('id', $id)->update(['password' => $newpasshashed,]);
+                    return redirect()->back()->with('success', 'Your password has been successfully changed!');
+                }else{
+                    return redirect()->back()->with('error', 'Your new password must have at least 8 characters');
+                }
+            }else{
+                return redirect()->back()->with('error', 'Your new password must coincide with confirmation field');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Incorrect password');
+        }
+    }
+    /**
+     * Set a new user dayy of.
+     *
+     * @param  \App\detail  $detail
+     * @return \Illuminate\Http\Response
+     */
+    public function daysoff(Request $request)
+    {
+        $id = Auth::user()->id;
+        $day = $request['day0'];
+        $month = $request['month0'];
+        $checkuser = daysoff::where('user_id', $id)->get()->all();
+        $count = count($checkuser);
+            for ($i=0; $i < $count; $i++) { 
+                $monthcycle = $checkuser[$i]->month;
+                if ($monthcycle == $month) {
+                    $daycycle = $checkuser[$i]->day;
+                    if ($daycycle == $day) {
+                        return redirect()->back()->with('error', 'The submitted date already exists');
+                    }
+                    else{
+                        daysoff::create([
+                        'user_id' => $id,
+                        'day' => $day,
+                        'month' => $month,]);
+                        return redirect()->back()->with('success', 'Your day off has been successfully registered!');
+                    }
+                }
+            }
+            daysoff::create([
+            'user_id' => $id,
+            'day' => $day,
+            'month' => $month,]);
+            return redirect()->back()->with('success', 'Your day off has been successfully registered!');
     }
 }

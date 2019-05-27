@@ -11,6 +11,7 @@
         <form id="pictureupload" enctype="multipart/form-data">
            @csrf
           <input type="file" name="picture">
+          <input type="text" style="display: none;" name="currentpic" id="currentpic">
         </form>
       </div>
       <div class="modal-footer">

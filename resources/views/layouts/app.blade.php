@@ -14,6 +14,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="{{ asset('js/changeprofilepic.js') }}"></script>
+    <script src="{{ asset('js/dayoff.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
@@ -55,8 +56,9 @@
                                 </li>
                             @endif
                         @else
-                            <a href="#" data-toggle="modal" data-target="#changeprofilepic">
-                                <img src="#" style="height: 40px; width: 40px; background-color: grey;">
+                            <a href="#" data-toggle="modal" data-target="#changeprofilepic" id="changepic">
+                                <img id="profilepic"
+                                 style="height: 40px; width: 40px; background-color: grey;">
                             </a>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -64,6 +66,23 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <!------------------Edit profile info------------------------------>
+                                    <a class="dropdown-item" onclick="event.preventDefault();
+                                                     document.getElementById('editprofile').submit();">
+                                        {{ __('Edit profile') }}
+                                    </a>
+                                    <form id="editprofile" action="/profile/{{ Auth::user()->id }}/edit" method="GET" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    <!------------------Change password------------------------------>
+                                    <a class="dropdown-item" onclick="event.preventDefault();
+                                                     document.getElementById('accset').submit();">
+                                        {{ __('Account settings') }}
+                                    </a>
+                                    <form id="accset" action="/profile" method="GET" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    <!------------------Logout form------------------------------>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -72,15 +91,6 @@
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
-                                    </form>
-                                    <!------------------------------------------------>
-                                    <a class="dropdown-item" href="/profile/{{ Auth::user()->id }}/edit" onclick="event.preventDefault();
-                                                     document.getElementById('editprofile').submit();">
-                                        {{ __('Edit profile') }}
-                                    </a>
-                                    <form id="editprofile" action="/profile/{{ Auth::user()->id }}/edit" method="GET" style="display: none;">
-                                        @csrf
-                                        <input type="hidden" class="form-control" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                     </form>
                                 </div>
                             </li>                            
@@ -91,6 +101,20 @@
         </nav>
 
         <main class="py-4">
+            @if(!empty(session('error')))
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
+            @if(!empty(session('success')))
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>

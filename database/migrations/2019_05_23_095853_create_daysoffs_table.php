@@ -17,7 +17,7 @@ class CreateDaysoffsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('day');
-            $table->integer('month');
+            $table->string('month');
             $table->timestamps();
         });
     }

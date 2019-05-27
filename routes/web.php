@@ -21,6 +21,12 @@ Route::get('/welcome', function () {
     return view('auth.newuser');
 });
 
+Route::get('profile/accst', 'DetailController@accSettings');
+
+Route::get('profile/dayoff', 'DetailController@daysoff');
+
+Route::put('profile/accstup', 'DetailController@accSettingsUpdate');
+
 Route::resource('profile', 'DetailController');
 
 Route::resource('image', 'FileUploadController');
