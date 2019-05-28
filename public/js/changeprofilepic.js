@@ -20,7 +20,7 @@
 		var url = src.slice(9,src.length)
 		$("#currentpic").attr('value', url);
 	})
-	/*This function sets the profile image to the current file*/
+	/*This function sets the profile image and video (if advanced) to the current file*/
 	function profilepic(){
 		var ruta = "/image/create";
 		$.ajax({
@@ -29,7 +29,8 @@
 				dataType: 'json',
 				data: "requested data",
 				success: function(data){
-					$("#profilepic").attr('src', '/storage/' + data[0].picture);
+					$("#profilepic").attr('src', '/storage/' + data[1][0].picture);
+					$("#profilevideos").attr('src', 'storage/' + data[0][0].video);
 				},
 				error: function(xhr){
 					console.log(xhr.responseText);

@@ -10,7 +10,8 @@ use App\daysoff;
 use Illuminate\Http\Request;
 use App\Http\Requests\DetailRequest;
 use App\Http\Requests\DetailUpdateRequest;
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\VideoRequest;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,6 @@ class DetailController extends Controller
                         'facebook' => $request['facebook'],
                         'twitter' => $request['twitter'],
                         'linkedin' => $request['linkedin'],
-                        'video' => null,
                     ]);
                 }else {                     //If user is pro
                     advanced::create([
@@ -102,7 +102,6 @@ class DetailController extends Controller
                         'facebook' => $request['facebook'],
                         'twitter' => $request['twitter'],
                         'linkedin' => $request['linkedin'],
-                        'video' => $request['video'],
                     ]);
                 }
             }else{                          //When user already has records on advanceds table
@@ -112,7 +111,6 @@ class DetailController extends Controller
                         'facebook' => $request['facebook'],
                         'twitter' => $request['twitter'],
                         'linkedin' => $request['linkedin'],
-                        'video' => null,
                     ]);
                 }else {                     //If user is pro
                     DB::table('advanceds')->where('user_id', $id)->update([
@@ -120,12 +118,11 @@ class DetailController extends Controller
                         'facebook' => $request['facebook'],
                         'twitter' => $request['twitter'],
                         'linkedin' => $request['linkedin'],
-                        'video' => $request['video'],
                     ]);
                 }
                 
             }
-            return redirect('/home');
+            return redirect()->back()->with('success', 'Your profile data has been saved!');
         }
     }
 
@@ -210,7 +207,7 @@ class DetailController extends Controller
                 'phone' => $userdetail['phone'],]
             );
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Your profile data has been saved!');
     }
 
     /**
@@ -270,7 +267,7 @@ class DetailController extends Controller
         }
     }
     /**
-     * Set a new user dayy of.
+     * Set a new user day off.
      *
      * @param  \App\detail  $detail
      * @return \Illuminate\Http\Response
@@ -303,5 +300,21 @@ class DetailController extends Controller
             'day' => $day,
             'month' => $month,]);
             return redirect()->back()->with('success', 'Your day off has been successfully registered!');
+    }
+
+    public function uploadVideo(Request $request){
+        $id = Auth::user()->id;
+        $file = $request['video'];
+        $folder = "userid" . $id . "-" . "video";
+        $mime = $request['video']->getClientMimeType();
+        if ($mime == 'video/webm' || 'video/mp4') {
+            $videoName = time()."user" . $id .'.'.request()->video->getClientOriginalExtension();
+            $video_record = $folder . "/" . $videoName;
+            Storage::putFileAs('public/'.$folder, $file, $videoName);
+            DB::table('advanceds')->where('user_id', $id)->update(['video' => $video_record,]);
+            return redirect()->back()->with('success', 'Your video has been successfully uploaded!');
+        }else {
+            return redirect()->back()->with('error', 'Only mp4 and webm files allowed');
+        }
     }
 }

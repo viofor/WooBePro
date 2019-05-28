@@ -9,16 +9,31 @@
     /*///////////////////////////////////////////////////////////////////////////////////////////
     The following function is intended to increase the protection against hackers messing with the form fields. Please take it as a suggestion. I also suggest to keep these kind of functions in a separate .js file included inside the <head> tag.
     ///////////////////////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////This function updates the Basic info fields/////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
     $("#updateprofileinfo1").click(function(e){
       e.preventDefault();   //Avoid to form submit by just hitting "Submit" button
       $("#updateprofileinfoform1").attr("action", "/profile/{{ Auth::user()->id }}"); //Setting the attribute "action" of form field (suggestion)
       $("#updateprofileinfoform1").submit(); //Submits the form
     });
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////This function updates the Advanced info fields///////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
     $("#updateprofileinfo2").click(function(e){
       e.preventDefault();   //Avoid to form submit by just hitting "Submit" button
       $("#updateprofileinfoform2").attr("action", "/profile"); //Setting the attribute "action" of form field (suggestion)
       $("#updateprofileinfoform2").attr("method", "POST");
       $("#updateprofileinfoform2").submit(); //Submits the form
+    });
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////This function uploads the video///////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+    $("#uploadvideo").click(function(e){
+      e.preventDefault();   //Avoid to form submit by just hitting "Submit" button
+      $("#uploadvideoform").attr("action", "/profile/video"); //Setting the attribute "action" of form field (suggestion)
+      $("#uploadvideoform").attr("method", "POST");
+      $("#uploadvideoform").submit(); //Submits the form
     });
     /*///////////////////////////////////////////////////////////////////////////////////////////
     The following function drops down the form related to the section the user wants to edit.
@@ -152,17 +167,22 @@
                       <div class='form-group'>
                         <label for='linkedin'>LinkedIn account address</label>
                         <input type='text' class='form-control' name='linkedin' placeholder='LinkedIn account address'>
-                      </div>";
-                  $usertype = $detail[0]->usertype;
+                      </div>
+                      <button type='button' id='updateprofileinfo2' class='btn btn-primary'>Submit</button>
+                    </form>";
+                    $usertype = $detail[0]->usertype;
                   if ($usertype == '2') {
+                    echo "<div class='container mt-3'><form id='uploadvideoform' enctype='multipart/form-data'>";
+                    echo csrf_field();
                     echo "<div class='form-group'>
-                        <label for='video'>Profile video</label>
-                        <input type='file' class='form-control' name='video'>
-                      </div>";
+                        <label for='video'>You can also upload a profile video here:</label>
+                        <input type='file' class='form-control-file' name='video'>
+                      </div>
+                      <p>*Only mp4 and webm files allowed</p>
+                      <button type='button' id='uploadvideo' class='btn btn-primary'>Submit video</button>
+                      </form></div>";
                   }
-                      echo "<button type='button' id='updateprofileinfo2' class='btn btn-primary'>Submit</button>
-                    </form>
-                  </div>
+                  echo "</div>
                 </div>";
                 }
                 ?>

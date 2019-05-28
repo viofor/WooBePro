@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ImageRequest;
 use App\detail;
+use App\advanced;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
@@ -31,9 +32,10 @@ class FileUploadController extends Controller
     {
         $id = Auth::user()->id;
         if ($request->ajax()) {
-            $pr = detail::where('user_id', $id)->get();
+            $image = detail::where('user_id', $id)->get();
+            $video = advanced::where('user_id', $id)->get();
             return response()->json(
-                $pr->toArray()
+                [$video->toArray(),$image->toArray()]
             );
         }
     }
