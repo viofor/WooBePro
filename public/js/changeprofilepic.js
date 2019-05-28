@@ -30,7 +30,16 @@
 				data: "requested data",
 				success: function(data){
 					$("#profilepic").attr('src', '/storage/' + data[1][0].picture);
-					$("#profilevideos").attr('src', 'storage/' + data[0][0].video);
+					var usertype = data[1][0].usertype;
+					if (usertype == '1') {
+						$("#profilevideos").hide();
+						$("#dayoffsection").hide();
+						$("#profilevideos").html(" ");
+						$("#dayoffsection").html(" ");
+					}else{
+						$("#profilevideos").attr('src', 'storage/' + data[0][0].video);
+					}
+					console.log(data[1][0].usertype);
 				},
 				error: function(xhr){
 					console.log(xhr.responseText);

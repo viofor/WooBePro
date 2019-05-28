@@ -10,6 +10,7 @@ use App\daysoff;
 use Illuminate\Http\Request;
 use App\Http\Requests\DetailRequest;
 use App\Http\Requests\DetailUpdateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\VideoRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
