@@ -17,4 +17,20 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
+Route::get('/welcome', function () {
+    return view('auth.newuser');
+});
+
+Route::get('profile/accst', 'DetailController@accSettings');
+
+Route::get('profile/dayoff', 'DetailController@daysoff');
+
+Route::put('profile/accstup', 'DetailController@accSettingsUpdate');
+
+Route::post('profile/video', 'DetailController@uploadVideo');
+
+Route::resource('profile', 'DetailController');
+
+Route::resource('image', 'FileUploadController');
+
 Route::get('/home', 'HomeController@index')->name('home');

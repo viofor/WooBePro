@@ -16,7 +16,10 @@
 
                     You are logged in!
                 </div>
-            </div>
+                <video id="profilevideos" controls>
+                    <source >
+                    Your browser does not support HTML5 video.
+                </video>
         </div>
     </div>
 </div>
