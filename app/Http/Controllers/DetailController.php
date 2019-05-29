@@ -358,18 +358,17 @@ class DetailController extends Controller
         $id = $userdetails->id;
         $userinfo = User::find($id);
         $query_advanced = $userinfo->advanced;
+        $review = review::where('user_id',$id)->get();  //reviews
         if ($query_advanced == 1) {
             $advancedinfo = advanced::where('user_id', $id)->get();
             if (empty($advancedinfo[0])) {
-                return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo]);
-                return "Empty";
+                return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo, 'reviews' => $review]);
             }else{
-                return view('layouts.userprofile', ['userdetails' => $userdetails,'userinfo' => $userinfo,'advancedinfo' => $advancedinfo]);
+                return view('layouts.userprofile', ['userdetails' => $userdetails,'userinfo' => $userinfo,'advancedinfo' => $advancedinfo, 'reviews' => $review]);
             }
             
         }else{
-            return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo]);
-            return "Está cayendo aquí";
+            return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo, 'reviews' => $review]);
         }
     }
 }

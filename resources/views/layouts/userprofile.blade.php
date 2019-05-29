@@ -6,7 +6,7 @@
 		<div class="col-4">
 			<img style="width: 80%; border-radius: 50%;" class="mx-auto d-block" src="/storage/{{ $userdetails->picture }}">
 		</div>
-		<div class="col-8">
+		<div class="col-6">
 			<strong><h3>{{ $userinfo->name }}{{ " " }}{{ $userinfo->lastname }}</h3>
 				<?php 
 					$advanced = $userinfo->advanced;
@@ -18,6 +18,10 @@
 			<p>{{ $userdetails->country }}{{ ", " }}{{ $userdetails->state }}{{ ", " }}{{ $userdetails->city }}</p>
 			<p>Member since {{ $userdetails->created_at->format('m Y') }}</p>
 
+		</div>
+		<div class="col">
+			<p>User reviews stars</p>
+			{{ $reviews[0]->stars }}
 		</div>
 	</div>
 	<?php 
