@@ -66,6 +66,10 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <!------------------User profile------------------------------>
+                                    <a class="dropdown-item" id="profileaddress">
+                                        {{ __('Profile') }}
+                                    </a>
                                     <!------------------Edit profile info------------------------------>
                                     <a class="dropdown-item" onclick="event.preventDefault();
                                                      document.getElementById('editprofile').submit();">
@@ -95,6 +99,10 @@
                                 </div>
                             </li>                            
                         @endguest
+                    </ul>
+                    <!-- Search tool -->
+                    <ul class="navbar-nav">
+                        Test text
                     </ul>
                 </div>
             </div>

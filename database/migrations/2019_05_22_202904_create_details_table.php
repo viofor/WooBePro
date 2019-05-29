@@ -17,6 +17,7 @@ class CreateDetailsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->string('usertype');
+            $table->string('profile_address');
             $table->string('country');
             $table->string('picture')->nullable();
             $table->string('state')->nullable();

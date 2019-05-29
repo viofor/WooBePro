@@ -37,10 +37,11 @@ class DaysoffController extends Controller
     public function store(Request $request)
     {
         $month = $request['month0'];                                         //loads the month input
+        $day = $request['day0'];                                             //loads the day input
         $this->validate($request, [
             'user_id' => ['required', 'numeric'],
             'month' => ['required', 'numeric', 'between:1,12'],
-            if ($month == '2') {                                            //if month is february
+            if ($month == '2) {                                            //if month is february
                 'day' => ['required', 'numeric', 'between:1,29'],
             }elseif ($month == '1'||'3'||'5'||'7'||'8'||'10'||'12') {       //if month has 31 day
                 'day' => ['required', 'numeric', 'between:1,31'],
@@ -48,11 +49,20 @@ class DaysoffController extends Controller
                 'day' => ['required', 'numeric', 'between:1,30'],
             }
         ]);
-
-        return daysoff::create([
+        if ($month == 2) {
+            if ($day > 29) {
+                return redirect()->back()->with('error', 'February has a maximum of 29 days');
+        }elseif ($month == '1'||'3'||'5'||'7'||'8'||'10'||'12') {
+            return daysoff::create([
             'user_id' => Auth::user()->id,
             'day' => $request['day0'],
             'month' => $request['month0'],
+        }else{
+            if ($day > '30') {
+                return redirect()->back()->with('error', 'This month has a maximum of 30 days');
+            }
+        }
+        
     }
 
     /**
