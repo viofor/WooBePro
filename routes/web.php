@@ -25,6 +25,8 @@ Route::get('profile/accst', 'DetailController@accSettings');
 
 Route::get('profile/dayoff', 'DetailController@daysoff');
 
+Route::get('profile/userprofile/{userlink}', 'DetailController@userprofile');
+
 Route::put('profile/accstup', 'DetailController@accSettingsUpdate');
 
 Route::post('profile/video', 'DetailController@uploadVideo');

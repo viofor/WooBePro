@@ -26,7 +26,7 @@
     		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 </div>
-
+<div id="dayoffsection">
 <div class="container col-md-6 mt-2">
 	<form id="daysoffform">
 		<div class="dayoff-group">
@@ -196,5 +196,6 @@
 			echo "<br>";
 		}
 	?>
+</div>
 </div>
 @endsection

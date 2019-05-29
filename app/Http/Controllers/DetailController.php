@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\detail;
+use App\review;
 use App\countries;
 use App\User;
 use App\advanced;
@@ -10,6 +11,7 @@ use App\daysoff;
 use Illuminate\Http\Request;
 use App\Http\Requests\DetailRequest;
 use App\Http\Requests\DetailUpdateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\VideoRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
@@ -42,13 +44,18 @@ class DetailController extends Controller
     *///////////////////////////////////////////////////////////////////////////////
     public function create(DetailRequest $request)
     {
+        $id = Auth::user()->id;
+        $string = User::find($id);
+        $datehour = $string['created_at'];
+        $link = $datehour->format('siH') . "-" . $id . "-" . strrev($datehour->format('Ymd'));
         $country_id = $request['country'];
         $countries = countries::find($country_id);
         $country = $countries['country'];
         if ($request['usertype'] == '2') {                  //if the user is a professional
             detail::create([
-                'user_id' => Auth::user()->id,
+                'user_id' => $id,
                 'usertype' => $request['usertype'],
+                'profile_address' => $link,
                 'country' => $country,
                 'state' => $request['state'],
                 'city' => $request['city'],
@@ -58,8 +65,9 @@ class DetailController extends Controller
             ]);
         }else{
             detail::create([
-                'user_id' => Auth::user()->id,
+                'user_id' => $id,
                 'usertype' => $request['usertype'],
+                'profile_address' => $link,
                 'country' => $country,
                 'state' => $request['state'],
                 'city' => $request['city'],
@@ -68,6 +76,13 @@ class DetailController extends Controller
                 'schedule' => null,
             ]);
         }
+        review::create([
+            'user_id' => $id, 
+            'reviewer_id' => '0', 
+            'stars' => '0', 
+            'review' => 'review', 
+            'review_response' => 'reviewresponse',
+        ]);
         return redirect('/home');
     }
 
@@ -162,7 +177,12 @@ class DetailController extends Controller
         $detail_country = $detail[0]->country;           //Getting the id of the country
         $country = countries::where('country', $detail_country)->get()[0]->id;  //Getting the name of the country
         $user_info = User::find($id);                   //Getting user data created during register
-        return view('editProfile')->with(['detail' => $detail, 'country' => $country, 'user' => $user_info]);
+        $advuserprof = advanced::find($id);
+        if (!empty($advuserprof)) {
+            return view('editProfile')->with(['detail' => $detail, 'country' => $country, 'user' => $user_info, 'canvideo' => '1']);
+        }else {
+            return view('editProfile')->with(['detail' => $detail, 'country' => $country, 'user' => $user_info, 'canvideo' => '0']);
+        }
     }
 
     /**
@@ -277,29 +297,40 @@ class DetailController extends Controller
         $id = Auth::user()->id;
         $day = $request['day0'];
         $month = $request['month0'];
-        $checkuser = daysoff::where('user_id', $id)->get()->all();
-        $count = count($checkuser);
-            for ($i=0; $i < $count; $i++) { 
-                $monthcycle = $checkuser[$i]->month;
-                if ($monthcycle == $month) {
-                    $daycycle = $checkuser[$i]->day;
-                    if ($daycycle == $day) {
-                        return redirect()->back()->with('error', 'The submitted date already exists');
-                    }
-                    else{
-                        daysoff::create([
-                        'user_id' => $id,
-                        'day' => $day,
-                        'month' => $month,]);
-                        return redirect()->back()->with('success', 'Your day off has been successfully registered!');
+        if ($month == 'February') {
+            if ($day >= 29) {
+                return redirect()->back()->with('error', 'February has a maximum of 29 days');
+            }
+        }elseif ($month == 'April'||'Juny'||'September'||'November') {
+            if ($day > 30) {
+                return redirect()->back()->with('error', 'This month has a maximum of 30 days');
+            }else{
+
+                $checkuser = daysoff::where('user_id', $id)->get()->all();
+                $count = count($checkuser);
+                for ($i=0; $i < $count; $i++) { 
+                    $monthcycle = $checkuser[$i]->month;
+                    if ($monthcycle == $month) {
+                        $daycycle = $checkuser[$i]->day;
+                        if ($daycycle == $day) {
+                            return redirect()->back()->with('error', 'The submitted date already exists');
+                        }
+                        else{
+                            daysoff::create([
+                            'user_id' => $id,
+                            'day' => $day,
+                            'month' => $month,]);
+                            return redirect()->back()->with('success', 'Your day off has been successfully registered!');
+                        }
                     }
                 }
+                daysoff::create([
+                'user_id' => $id,
+                'day' => $day,
+                'month' => $month,]);
+                return redirect()->back()->with('success', 'Your day off has been successfully registered!');
             }
-            daysoff::create([
-            'user_id' => $id,
-            'day' => $day,
-            'month' => $month,]);
-            return redirect()->back()->with('success', 'Your day off has been successfully registered!');
+        }
     }
 
     public function uploadVideo(Request $request){
@@ -308,13 +339,36 @@ class DetailController extends Controller
         $folder = "userid" . $id . "-" . "video";
         $mime = $request['video']->getClientMimeType();
         if ($mime == 'video/webm' || 'video/mp4') {
+            $url = $request['currentvid'];
             $videoName = time()."user" . $id .'.'.request()->video->getClientOriginalExtension();
             $video_record = $folder . "/" . $videoName;
             Storage::putFileAs('public/'.$folder, $file, $videoName);
             DB::table('advanceds')->where('user_id', $id)->update(['video' => $video_record,]);
+            Storage::disk('public')->delete($url);
             return redirect()->back()->with('success', 'Your video has been successfully uploaded!');
         }else {
             return redirect()->back()->with('error', 'Only mp4 and webm files allowed');
+        }
+    }
+
+    //This function return the user profile
+    public function userprofile(Request $request, $userlink){
+
+        $userdetails = detail::where('profile_address',$userlink)->get()[0];
+        $id = $userdetails->id;
+        $userinfo = User::find($id);
+        $query_advanced = $userinfo->advanced;
+        $review = review::where('user_id',$id)->get();  //reviews
+        if ($query_advanced == 1) {
+            $advancedinfo = advanced::where('user_id', $id)->get();
+            if (empty($advancedinfo[0])) {
+                return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo, 'reviews' => $review]);
+            }else{
+                return view('layouts.userprofile', ['userdetails' => $userdetails,'userinfo' => $userinfo,'advancedinfo' => $advancedinfo, 'reviews' => $review]);
+            }
+            
+        }else{
+            return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo, 'reviews' => $review]);
         }
     }
 }

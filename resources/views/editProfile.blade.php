@@ -171,12 +171,13 @@
                       <button type='button' id='updateprofileinfo2' class='btn btn-primary'>Submit</button>
                     </form>";
                     $usertype = $detail[0]->usertype;
-                  if ($usertype == '2') {
+                  if ($usertype == '2' && $canvideo == '1') {
                     echo "<div class='container mt-3'><form id='uploadvideoform' enctype='multipart/form-data'>";
                     echo csrf_field();
                     echo "<div class='form-group'>
                         <label for='video'>You can also upload a profile video here:</label>
                         <input type='file' class='form-control-file' name='video'>
+                        <input type='text' style='display: none;' name='currentvid' id='currentvid'>
                       </div>
                       <p>*Only mp4 and webm files allowed</p>
                       <button type='button' id='uploadvideo' class='btn btn-primary'>Submit video</button>

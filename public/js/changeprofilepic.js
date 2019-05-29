@@ -30,7 +30,17 @@
 				data: "requested data",
 				success: function(data){
 					$("#profilepic").attr('src', '/storage/' + data[1][0].picture);
-					$("#profilevideos").attr('src', 'storage/' + data[0][0].video);
+					$("#profileaddress").attr('href', '/profile/userprofile/' + data[1][0].profile_address);
+					var usertype = data[1][0].usertype;
+					if (usertype == '1') {
+						$("#profilevideos").hide();
+						$("#dayoffsection").hide();
+						$("#profilevideos").html(" ");
+						$("#dayoffsection").html(" ");
+					}else{
+						$("#profilevideos").attr('src', 'storage/' + data[0][0].video);
+						$("#currentvid").attr('value', data[0][0].video);
+					}
 				},
 				error: function(xhr){
 					console.log(xhr.responseText);
