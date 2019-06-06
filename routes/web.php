@@ -27,6 +27,8 @@ Route::get('profile/dayoff', 'DetailController@daysoff');
 
 Route::get('profile/userprofile/{userlink}', 'DetailController@userprofile');
 
+Route::get('/searchresults', 'DetailController@searchuser');
+
 Route::put('profile/accstup', 'DetailController@accSettingsUpdate');
 
 Route::post('profile/video', 'DetailController@uploadVideo');

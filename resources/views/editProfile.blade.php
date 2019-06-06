@@ -4,8 +4,10 @@
 <script type="text/javascript">
   var detail = {!! $country !!};   //Getting the country id value from Laravel controller
   var country = detail - 1;        //Arrays begin with index 0
+
   $(document).ready(function(){
     $('option')[country].setAttribute("selected", "selected");  //I get the current user country selected
+
     /*///////////////////////////////////////////////////////////////////////////////////////////
     The following function is intended to increase the protection against hackers messing with the form fields. Please take it as a suggestion. I also suggest to keep these kind of functions in a separate .js file included inside the <head> tag.
     ///////////////////////////////////////////////////////////////////////////////////////////*/
@@ -17,6 +19,9 @@
       $("#updateprofileinfoform1").attr("action", "/profile/{{ Auth::user()->id }}"); //Setting the attribute "action" of form field (suggestion)
       $("#updateprofileinfoform1").submit(); //Submits the form
     });
+
+
+
     /*///////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////This function updates the Advanced info fields///////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////*/
@@ -26,6 +31,9 @@
       $("#updateprofileinfoform2").attr("method", "POST");
       $("#updateprofileinfoform2").submit(); //Submits the form
     });
+
+
+
     /*///////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////This function uploads the video///////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////*/
@@ -35,14 +43,64 @@
       $("#uploadvideoform").attr("method", "POST");
       $("#uploadvideoform").submit(); //Submits the form
     });
+
+
     /*///////////////////////////////////////////////////////////////////////////////////////////
     The following function drops down the form related to the section the user wants to edit.
     ///////////////////////////////////////////////////////////////////////////////////////////*/
     $("h4").click(function(e){
       $(this.nextElementSibling).toggle();
     });
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+                          FUNCTIONS RELATED TO PROFESSIONAL PROFILE EDITING
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+    var userdetails = {!! $detail !!};
+  if (userdetails[0].usertype != '1') {         //Checks if user is professional
+    var detailshowhandle = {!! json_encode($detail->toArray()) !!}[0].skill;
+    var newarray = detailshowhandle.split(",");
+    $("#skill").val(detailshowhandle);
+
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    The following function removes the selected skill from user's skills.
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+    $(".skill").click(function(e){
+      var deleted = e.target.nextSibling.data;
+      var current = $("#skill").val();
+      var New = current.replace(deleted+",", "");
+      $("#skill").val(New);
+    });
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    The following function adds the submitted skill to user's skills.
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+
+    $("button.ml-5").click(function(){
+      var skillentryval = $("button.ml-5")[0].previousSibling.lastChild.value;
+      if (skillentryval == "") {
+        alert("Input a skill");
+      }else {
+        var current = $("#skill").val();
+        var array = current.concat(skillentryval+",");
+        $(".skilllist").append("<div class=''><div class='alert alert-primary'><a class='close skill' data-dismiss='alert' aria-label='close' onclick='deleteNewElement(this)'>&times;</a>"+skillentryval+"<br></div></div>");
+        $("#skill").val(array);     //This is the value to be sended to the table
+        $("button.ml-5")[0].previousSibling.lastChild.value = "";
+      }
+    });
+  }
+
   });
+  function deleteNewElement(x){
+    var deleted = x.nextSibling.data;
+    var current = $("#skill").val();
+    var New = current.replace(","+deleted, "");
+    $("#skill").val(New);
+  }
 </script>
+
+
+
 <!--
   If you want to see how the data arrives from Laravel controller to the views
   just uncomment this section. The data arrives as an object array
@@ -136,9 +194,25 @@
                           echo $detail[0]->schedule;
                           echo "' placeholder='Schedule of work'></div><div class='form-group'><label for='resume'>Resume</label><textarea class='form-control' name='resume' rows='3' placeholder='Give a resume about yourself'>";
                           echo $detail[0]->resume;
-                          echo "</textarea></div><div class='form-group'><label for='skills'>Skills</label><textarea class='form-control' name='skill' rows='3' placeholder='Tell us your skills'>";
-                          echo $detail[0]->skill;
-                          echo "</textarea></div></div>";
+                          echo "</textarea></div>
+                          <div class='form-group'>
+                            <label for='skills'>Skills</label>
+                            <p>Skills on your profile: </p>";
+                            $str = $detail[0]->skill;
+                            $array = explode(",",$str);
+                            echo "<div class='container'>
+                            <div class='row skilllist'>";
+                            foreach ($array as $key => $value) {
+                              if ($value != "") {
+                                echo "<div class=''><div class='alert alert-primary'><a class='close skill' data-dismiss='alert' aria-label='close'>&times;</a>";
+                                echo $value . "<br></div></div>";
+                              }  
+                            }
+                            echo "</div>
+                            </div>";
+                            echo "<input id='skill' name='skill' style='display:none;'></input>
+                            <input class='form-control' placeholder='Input your skill here'>
+                           </input></div><button type='button' class='btn btn-primary ml-5 mb-5'>Add skill</button></div>";
                         }
                       ?>
                       <button type="button" id="updateprofileinfo1" class="btn btn-primary">Submit</button>

@@ -371,4 +371,19 @@ class DetailController extends Controller
             return view('layouts.userprofile', ['userdetails' => $userdetails, 'userinfo' => $userinfo, 'reviews' => $review]);
         }
     }
+
+    /*///////////////////////////////////////////////////////////////////////////////////
+    This function will be used when the user wants to search freelancers by their skills
+    ///////////////////////////////////////////////////////////////////////////////////*/
+    public function searchuser(Request $request){
+        $searchitem = $request['search'];
+        $match = detail::where([
+            ['usertype', '=', '2'],
+            ['skill', 'like', "%{$searchitem}%"],
+        ]);
+        $match_id = $match->get('user_id');
+        $matchdetails = $match->simplePaginate(2);
+        $matchusers = DB::table('users')->whereIn('id', $match_id)->simplePaginate(2);
+        return view('layouts.searchusers', ['matchs' => $matchdetails, 'matchusers' => $matchusers]);
+    }
 }
