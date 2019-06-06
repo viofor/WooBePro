@@ -25,9 +25,6 @@
 		calculateParameters();
 		$("#daysoffform").attr('method', 'GET');
 		$("#daysoffform").attr('action', '/profile/dayoff');
-		console.log(monthinput[n]);
-		console.log(day[n]);
-		console.log($("#daysoffform"));
 		$("#daysoffform").submit();
 	});
 });

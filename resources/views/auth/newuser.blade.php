@@ -11,8 +11,40 @@
         $("#proform").hide();
       }
     });
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    The following function removes the selected skill from user's skills.
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+    $(".skill").click(function(e){
+      var deleted = e.target.nextSibling.data;
+      var current = $("#skill").val();
+      var New = current.replace(deleted+",", "");
+      $("#skill").val(New);
+    });
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+    The following function adds the submitted skill to user's skills.
+    ///////////////////////////////////////////////////////////////////////////////////////////*/
+
+    $("button.ml-5").click(function(){
+      var skillentryval = $("button.ml-5")[0].form[10].value;
+      if (skillentryval == "") {
+        alert("Input a skill");
+      }else {
+        var current = $("#skill").val();
+        var array = current.concat(skillentryval+",");
+        $(".skilllist").append("<div class=''><div class='alert alert-primary'><a class='close skill' data-dismiss='alert' aria-label='close' onclick='deleteNewElement(this)'>&times;</a>"+skillentryval+"<br></div></div>");
+        $("#skill").val(array);     //This is the value to be sended to the table
+        $("button.ml-5")[0].form[10].value = "";
+      }
+    });
   });
-  
+
+  function deleteNewElement(x){
+    var deleted = x.nextSibling.data;
+    var current = $("#skill").val();
+    var New = current.replace(","+deleted, "");
+    $("#skill").val(New);
+  }
 </script>
 <div class="container">
     <div class="row justify-content-center">
@@ -78,10 +110,17 @@
                         <label for="resume">Resume</label>
                         <textarea class="form-control" name="resume" id="resume" rows="3" placeholder="Give a resume about yourself"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="skills">Skills</label>
-                        <textarea class="form-control" name="skill" id="skills" rows="3" placeholder="Tell us your skills"></textarea>
+                    <div class='form-group'>
+                      <label for='skills'>Skills</label>
+                      <p>Skills on your profile: </p>
+                      <div class='container'>
+                        <div class='row skilllist'>
+                        </div>
+                      </div>
+                      <input id='skill' name='skill' style='display:none;'></input>
+                      <input class='form-control' placeholder='Input your skill here'></input>
                     </div>
+                    <button type='button' class='btn btn-primary ml-5 mb-5'>Add skill</button>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

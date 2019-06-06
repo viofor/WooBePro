@@ -28,8 +28,8 @@ class DetailRequest extends FormRequest
                 'user_id' => 'required|numeric',
                 'usertype' => 'required|numeric|between:1,2',
                 'country' => 'required|numeric|between:1,197',
-                'state' => 'alpha',
-                'city' => 'alpha',
+                'state' => 'string',
+                'city' => 'string',
                 'resume' => 'required|alpha_num',
                 'skill' => 'required|alpha_num',
                 'schedule' => 'required|alpha_num',
@@ -39,8 +39,8 @@ class DetailRequest extends FormRequest
                 'user_id' => 'required|numeric',
                 'usertype' => 'required|numeric|between:1,2',
                 'country' => 'required|numeric|between:1,197',
-                'state' => 'alpha',
-                'city' => 'alpha',
+                'state' => 'string',
+                'city' => 'string',
             ];
         }
     }

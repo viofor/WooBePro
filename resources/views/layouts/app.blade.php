@@ -14,6 +14,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="{{ asset('js/changeprofilepic.js') }}"></script>
+    <script src="{{ asset('js/searchusers.js') }}"></script>
     <script src="{{ asset('js/dayoff.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -98,12 +99,17 @@
                                     </form>
                                 </div>
                             </li>                            
-                        @endguest
                     </ul>
                     <!-- Search tool -->
                     <ul class="navbar-nav">
-                        Test text
+                        <form class="form-inline">
+                            <div class="form-group mb-2">
+                                <input type="text" class="form-control-plaintext" name="search" placeholder="Search users by skill">
+                            </div>
+                            <a href="#" id="searchuser"><img src="/storage/searchicon.jpg" style="width: 30px"></a>
+                        </form>
                     </ul>
+                        @endguest
                 </div>
             </div>
         </nav>
