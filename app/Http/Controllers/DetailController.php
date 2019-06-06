@@ -382,8 +382,8 @@ class DetailController extends Controller
             ['skill', 'like', "%{$searchitem}%"],
         ]);
         $match_id = $match->get('user_id');
-        $matchdetails = $match->simplePaginate(2);
-        $matchusers = DB::table('users')->whereIn('id', $match_id)->simplePaginate(2);
+        $matchdetails = $match->simplePaginate(20);
+        $matchusers = DB::table('users')->whereIn('id', $match_id)->simplePaginate(20);
         return view('layouts.searchusers', ['matchs' => $matchdetails, 'matchusers' => $matchusers]);
     }
 }
