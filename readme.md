@@ -9,6 +9,8 @@ This Laravel project is based on Laravel framework 5.8 version. For setting up t
 - PHP 7.1.3 or higher
 - [Composer](https://getcomposer.org/) installed on your computer
 
+> section break for Mac reference
+
 Once you meet these requirements, you need to install the Laravel project installer using Composer:
 
 - Open a command prompt (cmd)
@@ -133,3 +135,25 @@ I changed them like this:
 These lines must be changed depending on the email provider.
 
 **Finally**, after all this annoying process, if everything went OK, then you can go to your cmd and type **php artisan serve**, and then open the website for checking all its functions and behavior.
+
+
+## Mac users (64bit)
+
+In case of using Mac OS 64bit, these are the steps to follow:
+
+ 1. Download and install XAMPP
+ - Download XAMPP for Mac OS from from [this link](https://www.apachefriends.org/xampp-files/7.3.6/xampp-osx-7.3.6-0-vm.dmg), and install it
+ - For installing XAMPP on Mac OS, you can follow the instruction given on [this video](https://www.youtube.com/watch?v=XmklVBO89MM)
+ 2. Install Composer
+ - Download Composer from from [this link](https://getcomposer.org/composer.phar)
+ - Then open Terminal and type bellow to test:
+> php ~/Downloads/composer.phar --version
+- Now let’s copy to bin and install it, with below command:
+>cp ~/Downloads/composer.phar /usr/local/bin/composer
+>sudo chmod +x /usr/local/bin/composer
+- Let’s test, if all is good with composer:
+>composer --version
+- You should get something similar to this:
+> Composer version 1.7-dev (sd2guirofdhdsgjkfg3fsdj4bfdhf) 20xx–00–00 21:36:46
+
+From this point you can continue from the "section break for Mac reference"
