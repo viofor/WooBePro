@@ -157,3 +157,57 @@ In case of using Mac OS 64bit, these are the steps to follow:
 > Composer version 1.7-dev (sd2guirofdhdsgjkfg3fsdj4bfdhf) 20xx–00–00 21:36:46
 
 From this point you can continue from the "section break for Mac reference"
+
+## Some notes about Frontend
+
+In Laravel, the Frontend is mostly handled through *Blade* templates; nevertheless, this can be handled through some frontend frameworks, such as Vue.js, which comes embedded in Laravel.
+
+These blade templates are stored in the route resources/views, inside the project folder. There you can find some other folders (auth, layouts and vendor) and files:
+- accSettings.blade.php
+- editProfile.blade.php
+- home.blade.php.
+- welcome.blade.php
+
+The "welcome" blade view is the homepage that any visitor from the internet should see. This includes the Login and Register links when user is not logged. I made it show a "Home" button in place of login and register links when user is logged. This are the scenarios I made when an user hits "Home" button at "welcome" blade view:
+
+- When user is not verified, then will be redirected to a webpage which asks to verify the email address.
+- When user is verified, but still didn't fill the profile details (country, city, type of account, etc), then will be redirected to the details form
+- When user is verified and already filled the account details, then will be redirected to "home" blade view, which should be mostly the content for the website users
+
+The "accSettings" and "editProfile" are somehow self-explanatory. 
+
+The first one is the view where the user edits the account settings. Right now I just put a password change form, and a days off form for freelancers.
+
+The second one is the view where the user edit the profile details (country, city, phone number, etc). Inside that blade view I put some necesary scripts with some comments that I hope you find useful.
+
+In both blade view there are some php scripts, because there are content which should not be available for some type of users.
+
+Now, I'll explain some of the other blade views...
+
+- **auth folder**
+
+Inside this folder you can find the login and register related blade views. For example, when you are at the welcome page and you click on "Login", Laravel calls the *login.blade.php* view. Something similar happens when clicking "Register"; Laravel calls the *register.blade.php* view.
+
+The *verify.blade.php* is the view where the new user is asked to verify the email address. It includes a link for making laravel send a new verification mail to the user email address.
+
+The *newuser.blade.php* is the view where the new registered and verified user fills the profile details (country, city, type of account, etc).
+
+Inside the auth folder, there is the passwords folder. The views in there are used when the user wants to reset their password.
+
+- **layouts**
+
+In this folder you can find the layouts for most of the website views. 
+The base layout for the entire site is the *app.blade.php* blade template, so most of the styles should be edited there. The *appverify.blade.php* template is very similar, except it is used just for *verify.blade.php* and *newuser.blade.php* views. The main difference is the user menu, which in *appverify.blade.php* template only contains the Logout form.
+
+The *modal.blade.php* is a Bootstrap modal I used for changing the user profile picture. It's included inside the *app.blade.php* template at line 29:
+ >@include('layouts.modal')
+
+The *searchusers.blade.php* is the view where the users can see the search results. The styles there are terrible and need some work.
+
+Finally, the *userprofile.blade.php* is the view for the user profile page.
+
+Inside the layouts folder, you can see the options folder. This folder contains some html options that are included in some forms
+
+- **vendor**
+
+Inside the vendor/notifications path you will see the *email.blade.php* view. This is the verification mail that is sent to the new users, containing tha verification link.
